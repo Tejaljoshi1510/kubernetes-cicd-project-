@@ -1,43 +1,30 @@
 
-#!/bin/bash
+## Automated Kubernetes Demo
 
-set -e
+Run the complete end-to-end demo with one command:
 
-echo "=================================="
-echo " Deploying Kubernetes applications"
-echo "=================================="
+```bash
+chmod +x scripts/demo.sh
+./scripts/demo.sh
+```
 
-echo ""
-echo "1. Checking Kubernetes connection..."
-kubectl cluster-info
+The script:
+- Deploys Nginx and PostgreSQL.
+- Displays service ports.
+- Creates a PostgreSQL table and inserts test data.
+- Verifies database records.
+- Checks persistent volume claims.
+- Recreates the PostgreSQL pod and verifies data persistence.
+- Displays the Nginx access URL.
 
-echo ""
-echo "2. Deploying stateless application (Nginx)..."
-kubectl apply -f kubernetes/stateless/
+### Access the application
 
-echo ""
-echo "3. Deploying stateful application (PostgreSQL)..."
-kubectl apply -f kubernetes/stateful/
+Open the Nginx URL printed by the script.
 
-echo ""
-echo "4. Waiting for Nginx deployment..."
-kubectl rollout status deployment/nginx-deployment --timeout=120s
+### Expected verification
 
-echo ""
-echo "5. Waiting for PostgreSQL..."
-kubectl rollout status statefulset/postgres --timeout=180s
-
-echo ""
-echo "6. Checking Pods..."
-kubectl get pods
-
-echo ""
-echo "7. Checking Services..."
-kubectl get services
-
-echo ""
-echo "8. Checking Persistent Volume Claims..."
-kubectl get pvc
-
-echo ""
-echo "Deployment completed successfully!"
+- Nginx deployment rolls out successfully.
+- PostgreSQL pod reaches Ready status.
+- PostgreSQL query returns the test record.
+- PVC remains Bound.
+- The test record remains after PostgreSQL pod recreation.
